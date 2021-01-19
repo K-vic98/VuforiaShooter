@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private int _health;
+    [SerializeField] private Weapon _weapon;
     [SerializeField] private float _secondsBetweenShot;
 
     private float _lastShootTime;
@@ -16,7 +17,19 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void TakeDamage(int damage)
+    private void Update()
+    {
+        if (_lastShootTime <= 0)
+        {
+            _animator.Play("Shoot");
+            _weapon.Shoot();
+            _lastShootTime = _secondsBetweenShot;
+        }
+
+        _lastShootTime -= Time.deltaTime;
+    }
+
+    public void TakeDamage(int damage)
     {
         _health -= damage;
     }
